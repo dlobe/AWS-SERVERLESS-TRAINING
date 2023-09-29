@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: project 1.
+Resources:
+  VisitCounter:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.11
+      CodeUri: .
+      Description: VisitCounter.
+      MemorySize: 512
+      Timeout: 10
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Events:
+        Api3:
+          Type: Api
+          Properties:
+            Path: /visits
+            Method: GET
+      Environment:
+        Variables:
+          VisitCounterTable: !Ref VisitCounterTable
+  VisitCounterTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: visit_counter
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+
