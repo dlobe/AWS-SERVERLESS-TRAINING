@@ -1,6 +1,8 @@
 import json
 import boto3
-table_name = process.env.VisitCounterTable
+import os
+table_name = os.environ.get("VisitCounterTable")
+dynamodb = boto3.client('dynamodb')
 
 def lambda_handler(event, context):
     if event['httpMethod']=='GET':
